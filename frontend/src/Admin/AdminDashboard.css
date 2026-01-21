@@ -1,0 +1,101 @@
+
+.dashboard-bg {
+  background: url("https://images.unsplash.com/photo-1581093588401-22dbe2c4b04e?auto=format&fit=crop&w=1600&q=80")
+    no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  color: #fff;
+}
+
+
+.navbar {
+  height: 60px;
+  z-index: 1000;
+}
+
+.dashboard-container {
+  display: flex;
+  padding-top: 60px; 
+}
+
+
+.sidebar {
+  width: 250px;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 25px 20px;
+  min-height: calc(100vh - 60px);
+}
+
+.sidebar h2 {
+  font-size: 1.5rem;
+  color: #00d1ff;
+  margin-bottom: 25px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: 15px 0;
+}
+
+.sidebar ul li a {
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+  background-color: #00d1ff;
+  color: #000;
+}
+
+
+.main-content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+  backdrop-filter: blur(6px);
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  color: #000;
+  border-radius: 15px;
+}
+
+
+.card-body::-webkit-scrollbar {
+  width: 6px;
+}
+.card-body::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  body {
+    overflow-x: hidden;
+  }
+  .main-content {
+    padding: 15px;
+    overflow-y: auto;
+  }
+}

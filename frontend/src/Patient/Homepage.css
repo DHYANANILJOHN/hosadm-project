@@ -1,0 +1,125 @@
+/* 🌅 BACKGROUND */
+.home-container {
+  background: url("https://mir-s3-cdn-cf.behance.net/project_modules/hd/e9d944210060531.670a83200e591.jpg")
+    no-repeat center center/cover;
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: white;
+}
+
+/* 🌈 NAVBAR */
+.navbar-brand {
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  color: #00c8ff !important;
+}
+
+.nav-link {
+  color: #fff !important;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #00c8ff !important;
+}
+
+/* 🌟 HERO SECTION — SMALLER HEIGHT */
+.hero-section {
+  position: relative;
+  min-height: 70vh; /* smaller hero */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-top: 100px;
+  padding-bottom: 50px;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+  padding: 20px;
+  animation: fadeIn 2s ease;
+}
+
+.hero-content h1 {
+  font-size: 2.7rem;
+  font-weight: 700;
+  color: #00c8ff;
+}
+
+.hero-content p {
+  font-size: 1.1rem;
+  margin: 20px 0;
+  color: #f1f1f1;
+}
+
+.hero-btn {
+  background-color: #00c8ff;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.hero-btn:hover {
+  background-color: #009ad6;
+  box-shadow: 0 0 15px #00c8ff;
+}
+
+/* 🩺 INFO SECTION */
+.info-section {
+  margin-top: 40px;
+  margin-bottom: 70px;
+  padding: 0 15px;
+}
+
+/* 💎 GLASS CARDS */
+.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fff;
+  padding: 30px 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card h5 {
+  color: #00c8ff;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.glass-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(0, 200, 255, 0.4);
+}
+
+/* ✨ ANIMATION */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
