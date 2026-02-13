@@ -6,9 +6,9 @@ exports.getDoctors = async (req, res) => {
 };
 
 exports.addDoctor = async (req, res) => {
-  const doc = new Doctor(req.body);
-  await doc.save();
-  res.json({ msg: "Doctor Added" });
+  const d = new Doctor(req.body);
+  await d.save();
+  res.json({ msg: "Doctor added" });
 };
 
 exports.approveDoctor = async (req, res) => {

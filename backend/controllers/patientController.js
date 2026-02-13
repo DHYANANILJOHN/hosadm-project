@@ -8,7 +8,7 @@ exports.getPatients = async (req, res) => {
 exports.addPatient = async (req, res) => {
   const p = new Patient(req.body);
   await p.save();
-  res.json({ msg: "Patient Added" });
+  res.json({ msg: "Patient added" });
 };
 
 exports.approvePatient = async (req, res) => {
