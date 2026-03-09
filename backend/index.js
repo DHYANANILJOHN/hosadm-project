@@ -17,6 +17,8 @@ app.use("/Patient", require("./routes/routespatient"));
 app.use("/Admin", require("./routes/adminRoutes"));
 app.use("/Booking", require("./routes/bookingRoutes"));
 
+
+
 app.listen(5000, () => {
   console.log("🚀 Server running at http://localhost:5000");
 });
