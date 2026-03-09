@@ -20,3 +20,22 @@ exports.rejectPatient = async (req, res) => {
   await Patient.findByIdAndUpdate(req.params.id, { status: "Rejected" });
   res.json({ msg: "Rejected" });
 };
+
+exports.resetPassword = async (req, res) => {
+  const { email, newPassword } = req.body;
+
+  try {
+    const patient = await Patient.findOne({ email });
+
+    if (!patient) {
+      return res.status(404).json({ msg: "Patient not found" });
+    }
+
+    patient.password = newPassword;
+    await patient.save();
+
+    res.json({ msg: "Password reset successful" });
+  } catch (error) {
+    res.status(500).json({ msg: "Server error" });
+  }
+};

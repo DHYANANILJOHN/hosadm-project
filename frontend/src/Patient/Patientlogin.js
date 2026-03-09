@@ -1,99 +1,59 @@
 import React, { useState } from "react";
-
 import { Link } from "react-router-dom";
-
-import"./Patient.css"
+import axios from "axios";
+import "./Patient.css";
 
 function PatientLogin() {
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
 
-const [form, setForm] = useState({
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-email: "",
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-password: "",
+    axios
+      .post("http://localhost:5000/api/authPatient/login", form)
+      .then((response) => {
+        alert("Login Successful!");
+        console.log(response.data);
+      })
+      .catch((error) => {
+        alert("Login Failed");
+        console.log(error);
+      });
+  };
 
-});
+  return (
+    <div className="auth-container">
+      <h2>Patient Login</h2>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          onChange={handleChange}
+        /><br /><br />
 
-const handleChange = (e) => {
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          onChange={handleChange}
+        /><br /><br />
 
-setForm({ ...form, [e.target.name]: e.target.value });
+        <button type="submit">Login</button>
+      </form>
 
-};
-
-const handleSubmit = (e) => {
-
-e.preventDefault();
-
-
-
-
-
-if (form.email && form.password) {
-
-  alert("Login Successful!\nEmail: " + form.email);
-
-} else {
-
-  alert("Please enter both email and password.");
-
-}
-
-};
-
-return (
-
-<div className="auth-container">
-
-  <h2>Patient Login</h2>
-
-  <form onSubmit={handleSubmit}>
-
-    <input
-
-      type="email"
-
-      name="email"
-
-      placeholder="Email"
-
-      value={form.email}
-
-      onChange={handleChange}
-
-    /><br /><br />
-
-
-
-    <input
-
-      type="password"
-
-      name="password"
-
-      placeholder="Password"
-
-      value={form.password}
-
-      onChange={handleChange}
-
-    /><br /><br />
-
-
-
-    <button type="submit">Login</button>
-
-   
-
-  </form>
-
-    <p>Don't have an account? <Link to="/testrun">Register here</Link></p>
-
-    <p>Forgot your password? <Link to="/forgot">Reset here</Link></p>
-
-</div>
-
-);
-
+      <p>
+        Don't have an account? <Link to="/testrun">Register here</Link>
+      </p>
+    </div>
+  );
 }
 
 export default PatientLogin;

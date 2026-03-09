@@ -1,30 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const Patient = require("../models/Patient");
+const controller = require("../controllers/patientController");
 
-// get all
-router.get("/", async (req, res) => {
-  const data = await Patient.find();
-  res.json(data);
-});
+// get all patients
+router.get("/", controller.getPatients);
 
 // add patient
-router.post("/", async (req, res) => {
-  const p = new Patient(req.body);
-  await p.save();
-  res.json({ msg: "Patient added" });
-});
+router.post("/", controller.addPatient);
 
-// approve
-router.put("/approve/:id", async (req, res) => {
-  await Patient.findByIdAndUpdate(req.params.id, { status: "Approved" });
-  res.json({ msg: "Approved" });
-});
+// approve patient
+router.put("/approve/:id", controller.approvePatient);
 
-// reject
-router.put("/reject/:id", async (req, res) => {
-  await Patient.findByIdAndUpdate(req.params.id, { status: "Rejected" });
-  res.json({ msg: "Rejected" });
-});
+// reject patient
+router.put("/reject/:id", controller.rejectPatient);
+
+// reset password
+router.put("/reset-password", controller.resetPassword);
 
 module.exports = router;
