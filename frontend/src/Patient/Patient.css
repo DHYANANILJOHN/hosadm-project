@@ -1,3 +1,6 @@
+/* ========================= */
+/* GLOBAL PAGE STYLE */
+/* ========================= */
 
 body {
   margin: 0;
@@ -11,6 +14,10 @@ body {
 }
 
 
+/* ========================= */
+/* LOGIN / AUTH CONTAINER */
+/* ========================= */
+
 .auth-container {
   width: 350px;
   margin: 100px auto;
@@ -18,17 +25,14 @@ body {
   border: 1px solid #ccc;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  background-color: rgba(255, 255, 255, 0.9); /* Slight transparency for readability */
-  font-family: Arial, sans-serif;
+  background-color: rgba(255, 255, 255, 0.9);
 }
-
 
 .auth-container h2 {
   text-align: center;
   margin-bottom: 20px;
   color: #333;
 }
-
 
 .auth-container input {
   width: 100%;
@@ -40,7 +44,6 @@ body {
   box-sizing: border-box;
 }
 
-
 .auth-container button {
   width: 100%;
   padding: 10px;
@@ -51,7 +54,7 @@ body {
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: 0.3s;
 }
 
 .auth-container button:hover {
@@ -64,14 +67,72 @@ body {
   font-size: 14px;
 }
 
-.auth-container p a,
-.auth-container p span {
+.auth-container p a {
   color: #007bff;
-  cursor: pointer;
   text-decoration: none;
 }
 
-.auth-container p a:hover,
-.auth-container p span:hover {
+.auth-container p a:hover {
   text-decoration: underline;
+}
+
+
+/* ========================= */
+/* PATIENT DASHBOARD */
+/* ========================= */
+
+.dashboard-container {
+  width: 500px;
+  margin: 80px auto;
+  padding: 30px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+}
+
+.dashboard-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-section {
+  margin-bottom: 25px;
+}
+
+.profile-section p {
+  font-size: 15px;
+  margin: 6px 0;
+}
+
+.history-box {
+  background-color: #f5f7fa;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.history-box h3 {
+  margin-top: 0;
+}
+
+.history-box p {
+  font-size: 14px;
+  color: #555;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #dc3545;
+  color: white;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #b02a37;
 }

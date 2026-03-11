@@ -8,6 +8,9 @@ function PatientRegister() {
     email: "",
     password: "",
     phone: "",
+    age: "",
+    dob: "",
+    gender: ""
   });
 
   const handleChange = (e) => {
@@ -32,7 +35,9 @@ function PatientRegister() {
   return (
     <div className="auth-container">
       <h2>Patient Registration</h2>
+
       <form onSubmit={handleSubmit}>
+
         <input
           type="text"
           name="name"
@@ -61,7 +66,28 @@ function PatientRegister() {
           onChange={handleChange}
         /><br />
 
+        <input
+          type="number"
+          name="age"
+          placeholder="Age"
+          onChange={handleChange}
+        /><br />
+
+        <input
+          type="date"
+          name="dob"
+          onChange={handleChange}
+        /><br />
+
+        <select name="gender" onChange={handleChange}>
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select><br />
+
         <button type="submit">Register</button>
+
       </form>
     </div>
   );
