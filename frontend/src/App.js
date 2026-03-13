@@ -17,6 +17,7 @@ import DoctorLogin from './Doc/DoctorLogin';
 import DoctorDashboard from './Doc/DoctorDashboard';
 import DoctorProfile from './Doc/DoctorProfile';
 import DoctorPatients from './Doc/DoctorPatients';
+import DoctorRegister from './Doc/DoctorRegister';
 
 
 function App() {
@@ -35,7 +36,9 @@ function App() {
              <Route path='/deti' element={<><AdminPatientVerify/></>}></Route>
              <Route path='/docdeti' element={<><AdminDoctorVerify/></>}></Route>
              <Route path='/doclog' element={<><DoctorLogin/></>}></Route>
+              <Route path='/docreg' element={<><DoctorRegister/></>}></Route>
             <Route path="/doclog" element={<DoctorLogin />} />
+
 
     <Route path="/docdash" element={<DoctorDashboard />}>
       <Route path="docprofile" element={<DoctorProfile />} />

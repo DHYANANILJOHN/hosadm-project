@@ -125,3 +125,40 @@ exports.rejectDoctor = async (req, res) => {
     res.status(500).json({ msg: "Error rejecting doctor" });
   }
 };
+// ===============================
+// Doctor Registration
+// ===============================
+exports.registerDoctor = async (req, res) => {
+
+  try {
+
+    const { email, password } = req.body;
+
+    const existingDoctor = await Doctor.findOne({ email });
+
+    if (existingDoctor) {
+      return res.status(400).json({ msg: "Doctor already exists" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const doctor = new Doctor({
+      ...req.body,
+      password: hashedPassword,
+      status: "Pending"
+    });
+
+    await doctor.save();
+
+    res.json({
+      msg: "Doctor registered successfully. Wait for admin approval."
+    });
+
+  } catch (error) {
+
+    res.status(500).json({ msg: "Error registering doctor" });
+
+  }
+
+};

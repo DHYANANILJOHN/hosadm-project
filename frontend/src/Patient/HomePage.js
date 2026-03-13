@@ -47,12 +47,34 @@ function HomePage() {
                   </Link>
                 </li>
 
-                <li className="nav-item">
-                  <Link className="nav-link" to='/testrun'>
-                   Register
-                  </Link>
+                {/* REGISTER DROPDOWN */}
+                <li className="nav-item dropdown">
+                  <span
+                    className="nav-link dropdown-toggle"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                  >
+                    Register
+                  </span>
+
+                  <ul className="dropdown-menu">
+
+                    <li>
+                      <Link className="dropdown-item" to="/testrun">
+                        Patient Register
+                      </Link>
+                    </li>
+
+                    <li>
+                      <Link className="dropdown-item" to="/docreg">
+                        Doctor Register
+                      </Link>
+                    </li>
+
+                  </ul>
                 </li>
 
+                {/* LOGIN DROPDOWN */}
                 <li className="nav-item dropdown">
                   <span
                     className="nav-link dropdown-toggle"
@@ -68,11 +90,13 @@ function HomePage() {
                         Patient Login
                       </Link>
                     </li>
+
                     <li>
                       <Link className="dropdown-item" to="/doclog">
                         Doctor Login
                       </Link>
                     </li>
+
                     <li>
                       <Link className="dropdown-item" to="/adlog">
                         Admin Register
@@ -83,9 +107,11 @@ function HomePage() {
 
               </ul>
             </div>
+
           </div>
         </div>
       </nav>
+
 
       <section className="hero-section">
         <div className="overlay"></div>
@@ -100,6 +126,7 @@ function HomePage() {
           </Link>
         </div>
       </section>
+
 
       <section className="info-section container py-5">
         <div className="row g-4">

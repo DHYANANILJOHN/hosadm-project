@@ -87,12 +87,16 @@ function PatientLogin() {
           onChange={handleChange}
         /><br /><br />
 
-        <button type="submit">Login</button>
-      </form>
+      <button type="submit">Login</button>
+</form>
 
-      <p>
-        Don't have an account? <Link to="/testrun">Register here</Link>
-      </p>
+<p>
+  <Link to="/forgot">Forgot Password?</Link>
+</p>
+
+<p>
+  Don't have an account? <Link to="/testrun">Register here</Link>
+</p>
     </div>
   );
 }
