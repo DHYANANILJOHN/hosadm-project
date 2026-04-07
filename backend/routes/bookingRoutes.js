@@ -2,51 +2,59 @@ const express = require("express");
 const router = express.Router();
 const Booking = require("../models/Booking");
 
-// ✅ GET ALL BOOKINGS
-router.get("/", async (req, res) => {
+// CREATE BOOKING (LOGIN OR GUEST)
+router.post("/", async (req, res) => {
   try {
-    const data = await Booking.find()
-      .populate("doctorId")
-      .populate("patientId");
+    const { patientId, guestName, doctorId, date, time, reason } = req.body;
 
-    res.json(data);
+    // validation fix → prevents 400 error
+    if (!doctorId || !date || !time) {
+      return res.status(400).json({ msg: "Missing required fields" });
+    }
+
+    const booking = new Booking({
+      patientId: patientId || null,
+      guestName: guestName || null,
+      doctorId,
+      date,
+      time,
+      reason: reason || ""
+    });
+
+    await booking.save();
+
+    res.json({ success: true, booking });
+
   } catch (err) {
-    console.error("GET BOOKINGS ERROR:", err);
+    console.error("Booking error:", err);
     res.status(500).json({ msg: "Server error" });
   }
 });
 
-// ✅ CREATE BOOKING
-router.post("/", async (req, res) => {
+
+// GET ALL BOOKINGS (ADMIN)
+router.get("/", async (req, res) => {
   try {
-    const { patientId, doctorId, date } = req.body;
+    const bookings = await Booking.find()
+      .populate("patientId")
+      .populate("doctorId");
 
-    // 🔴 BASIC VALIDATION
-    if (!patientId || !doctorId || !date) {
-      return res.status(400).json({ msg: "Missing required fields" });
-    }
-
-    const b = new Booking(req.body);
-    await b.save();
-
-    res.json({ msg: "Booking created" });
-
+    res.json(bookings);
   } catch (err) {
-    console.error("BOOKING ERROR:", err);
-    res.status(500).json({
-      msg: "Server error",
-      error: err.message   // 🔍 helps debugging
-    });
+    console.error(err);
+    res.status(500).json({ msg: "Server error" });
   }
 });
-
-// ✅ CANCEL BOOKING
-router.put("/cancel/:id", async (req, res) => {
+// ✅ GET BOOKINGS FOR SPECIFIC DOCTOR
+router.get("/doctor/:id", async (req, res) => {
   try {
-    await Booking.findByIdAndUpdate(req.params.id, { status: "Cancelled" });
-    res.json({ msg: "Cancelled" });
+    const bookings = await Booking.find({ doctorId: req.params.id })
+      .populate("patientId")
+      .populate("doctorId");
+
+    res.json(bookings);
   } catch (err) {
-    console.error("CANCEL ERROR:", err);
+    console.error(err);
     res.status(500).json({ msg: "Server error" });
   }
 });

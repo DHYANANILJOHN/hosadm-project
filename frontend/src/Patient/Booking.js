@@ -24,71 +24,67 @@ function Booking() {
       .catch(err => console.log(err));
   }, []);
 
-  // 🔹 Handle input change
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!form.name || !form.doctorId || !form.date) {
+    alert("Please fill required fields");
+    return;
+  }
+
+  const patient = JSON.parse(localStorage.getItem("patient"));
+
+  let bookingData = {
+    doctorId: form.doctorId,
+    date: form.date,
+    time: form.time,
+    reason: form.reason,
   };
 
-  // 🔹 Handle submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  if (patient && patient._id) {
+    // ✅ Logged-in booking
+    bookingData.patientId = patient._id;
+  } else {
+    // ✅ Guest booking
+    bookingData.guestName = form.name;
+  }
 
-    if (!form.name || !form.doctorId || !form.date || !form.time) {
-      alert("Please fill all required fields");
-      return;
-    }
+  console.log("Booking Data:", bookingData);
 
-    // ✅ GET LOGGED-IN PATIENT
-    const patient = JSON.parse(localStorage.getItem("patient"));
+  try {
+    const res = await fetch("http://localhost:5000/api/bookings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(bookingData),
+    });
 
-    // ❗ Safety check
-    if (!patient || !patient.id) {
-      alert("Please login first");
-      return;
-    }
+    const data = await res.json();
 
-    try {
-      const res = await fetch("http://localhost:5000/api/bookings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          patientId: patient.id,     // ✅ FIXED
-          doctorId: form.doctorId,
-          date: form.date,
-          time: form.time,
-          reason: form.reason,
-        }),
+    if (res.ok) {
+      alert("✅ Appointment Booked!");
+      setForm({
+        name: "",
+        doctorId: "",
+        date: "",
+        time: "",
+        reason: "",
       });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        alert("✅ Appointment Booked!");
-        
-        // 🔄 Reset form
-        setForm({
-          name: "",
-          doctorId: "",
-          date: "",
-          time: "",
-          reason: "",
-        });
-
-      } else {
-        alert(data.msg || "Booking failed");
-      }
-
-    } catch (err) {
-      console.error("Booking error:", err);
-      alert("❌ Server error");
+    } else {
+      alert(data.msg);
     }
-  };
+
+  } catch (err) {
+    console.error(err);
+    alert("❌ Server error");
+  }
+};
 
   return (
     <div className="booking-container">
-
       <form className="booking-form" onSubmit={handleSubmit}>
         <h2>Book Appointment</h2>
 
@@ -100,7 +96,6 @@ function Booking() {
           onChange={handleChange}
         />
 
-        {/* ✅ Doctor List */}
         <select
           name="doctorId"
           value={form.doctorId}
@@ -130,7 +125,7 @@ function Booking() {
 
         <textarea
           name="reason"
-          placeholder="Reason for visit (optional)"
+          placeholder="Reason for visit"
           value={form.reason}
           onChange={handleChange}
         />
@@ -141,7 +136,6 @@ function Booking() {
           <Link to="/home">Back to Home</Link>
         </p>
       </form>
-
     </div>
   );
 }

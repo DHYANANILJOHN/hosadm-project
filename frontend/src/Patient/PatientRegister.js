@@ -20,14 +20,33 @@ function PatientRegister() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // ✅ VALIDATION
+    if (!form.name || !form.email || !form.password) {
+      alert("Name, Email and Password are required");
+      return;
+    }
+
     axios
-      .post("http://localhost:5000/api/authPatient/register", form)
+      .post("http://localhost:5000/api/patients/register", form)
       .then((response) => {
-        alert("Registered Successfully!");
-        console.log(response.data);
+        // ✅ SHOW BACKEND MESSAGE
+        alert(response.data.msg || "Registered Successfully!");
+
+        // OPTIONAL: clear form after success
+        setForm({
+          name: "",
+          email: "",
+          password: "",
+          phone: "",
+          age: "",
+          dob: "",
+          gender: ""
+        });
+
       })
       .catch((error) => {
-        alert("Registration Failed");
+        // ✅ SHOW REAL ERROR
+        alert(error.response?.data?.msg || "Registration Failed");
         console.log(error);
       });
   };
@@ -42,6 +61,7 @@ function PatientRegister() {
           type="text"
           name="name"
           placeholder="Full Name"
+          value={form.name}
           onChange={handleChange}
         /><br />
 
@@ -49,6 +69,7 @@ function PatientRegister() {
           type="email"
           name="email"
           placeholder="Email"
+          value={form.email}
           onChange={handleChange}
         /><br />
 
@@ -56,6 +77,7 @@ function PatientRegister() {
           type="password"
           name="password"
           placeholder="Password"
+          value={form.password}
           onChange={handleChange}
         /><br />
 
@@ -63,6 +85,7 @@ function PatientRegister() {
           type="text"
           name="phone"
           placeholder="Phone"
+          value={form.phone}
           onChange={handleChange}
         /><br />
 
@@ -70,16 +93,18 @@ function PatientRegister() {
           type="number"
           name="age"
           placeholder="Age"
+          value={form.age}
           onChange={handleChange}
         /><br />
 
         <input
           type="date"
           name="dob"
+          value={form.dob}
           onChange={handleChange}
         /><br />
 
-        <select name="gender" onChange={handleChange}>
+        <select name="gender" value={form.gender} onChange={handleChange}>
           <option value="">Select Gender</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>

@@ -4,7 +4,11 @@ const bookingSchema = new mongoose.Schema({
   patientId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Patient",
-    required: true
+    default: null
+  },
+  guestName: {
+    type: String,
+    default: null
   },
   doctorId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -14,6 +18,14 @@ const bookingSchema = new mongoose.Schema({
   date: {
     type: String,
     required: true
+  },
+  time: {
+    type: String,
+    required: true
+  },
+  reason: {
+    type: String,
+    default: ""
   },
   status: {
     type: String,

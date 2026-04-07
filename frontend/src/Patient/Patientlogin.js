@@ -11,7 +11,7 @@ function PatientLogin() {
   });
 
   const [patient, setPatient] = useState(
-    JSON.parse(localStorage.getItem("patient"))
+    JSON.parse(localStorage.getItem("patient")) || null
   );
 
   const handleChange = (e) => {
@@ -21,20 +21,27 @@ function PatientLogin() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // ✅ VALIDATION
+    if (!form.email || !form.password) {
+      alert("Please enter email and password");
+      return;
+    }
+
     axios
-      .post("http://localhost:5000/api/authPatient/login", form)
+      .post("http://localhost:5000/api/patients/login", form)
       .then((response) => {
 
-        alert("Login Successful!");
+        // ✅ SHOW BACKEND MESSAGE
+        alert(response.data.msg || "Login Successful!");
 
-        // ✅ Save patient
         localStorage.setItem("patient", JSON.stringify(response.data.patient));
 
         setPatient(response.data.patient);
 
       })
       .catch((error) => {
-        alert("Login Failed");
+        // ✅ SHOW REAL ERROR
+        alert(error.response?.data?.msg || "Login Failed");
         console.log(error);
       });
   };
@@ -45,7 +52,7 @@ function PatientLogin() {
   };
 
   // ============================
-  // ✅ DASHBOARD (AFTER LOGIN)
+  // DASHBOARD
   // ============================
   if (patient) {
     return (
@@ -58,8 +65,6 @@ function PatientLogin() {
         <p><b>Phone:</b> {patient.phone}</p>
         <p><b>Age:</b> {patient.age}</p>
         <p><b>DOB:</b> {patient.dob}</p>
-
-        {/* ✅ FIXED GENDER */}
         <p><b>Gender:</b> {patient.gender}</p>
 
         <h3>Medical History</h3>
@@ -67,7 +72,6 @@ function PatientLogin() {
 
         <br />
 
-        {/* ✅ BOOKING BUTTON */}
         <Link to="/Booking">
           <button style={{ marginBottom: "10px" }}>
             Book Appointment
@@ -76,7 +80,6 @@ function PatientLogin() {
 
         <br />
 
-        {/* LOGOUT */}
         <button onClick={logout}>Logout</button>
       </div>
     );

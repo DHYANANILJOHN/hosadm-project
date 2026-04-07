@@ -11,24 +11,33 @@ function PatientForgotPassword() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // ✅ VALIDATION
     if (!email || !newPassword) {
       alert("Please enter both email and new password.");
       return;
     }
 
-    axios.put("http://localhost:5000/api/patients/reset-password", {
-  email,
-  newPassword
-})
+    if (newPassword.length < 4) {
+      alert("Password must be at least 4 characters");
+      return;
+    }
+
+    axios
+      .put("http://localhost:5000/api/patients/reset-password", {
+        email,
+        newPassword
+      })
       .then((res) => {
         alert(res.data.msg || "Password reset successful");
+
         setEmail("");
         setNewPassword("");
-        navigate("/enter"); // go to login page
+
+        navigate("/enter"); // redirect to login
       })
       .catch((err) => {
-        console.log(err);
-        alert("Error resetting password");
+        alert(err.response?.data?.msg || "Error resetting password");
+        console.log("RESET ERROR:", err);
       });
   };
 

@@ -152,7 +152,9 @@ function AdminDashboard() {
                     <div className="col-12 col-md-6 col-lg-4" key={b._id}>
                       <div className="glass-card">
 
-                        <h5>{b.patientId?.name || "Unknown Patient"}</h5>
+                        <h5>
+                          {b.patientId?.name || b.guestName || "Unknown"}
+                        </h5>
 
                         <p>
                           <strong>Doctor:</strong>{" "}

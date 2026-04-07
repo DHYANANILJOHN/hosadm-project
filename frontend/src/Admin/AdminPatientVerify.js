@@ -11,18 +11,29 @@ function AdminPatientVerify() {
   }, []);
 
   const fetchPatients = () => {
-   axios.get("http://localhost:5000/api/patients")
+    axios
+      .get("http://localhost:5000/api/patients")
       .then(res => setPatients(res.data))
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log("FETCH ERROR:", err);
+        alert("Failed to load patients");
+      });
   };
 
   const handleStatusUpdate = (id, status) => {
     const endpoint = status === "Approved" ? "approve" : "reject";
-    axios.put(`http://localhost:5000/api/patients/${endpoint}/${id}`)
+
+    axios
+      .put(`http://localhost:5000/api/patients/${endpoint}/${id}`)
       .then(() => {
-        setPatients(prev =>
-          prev.map(p => p._id === id ? { ...p, status: status } : p)
-        );
+        alert(`Patient ${status}`);
+
+        // ✅ REFRESH FROM DB (BEST PRACTICE)
+        fetchPatients();
+      })
+      .catch(err => {
+        console.log("UPDATE ERROR:", err);
+        alert("Failed to update status");
       });
   };
 
@@ -31,34 +42,65 @@ function AdminPatientVerify() {
       <nav className="navbar">
         <div className="nav-brand">🏥 Patient Verification</div>
         <Link to="/addash">
-          <button className="logout-btn" style={{background: "#6c757d"}}>Back to Dashboard</button>
+          <button className="logout-btn" style={{ background: "#6c757d" }}>
+            Back to Dashboard
+          </button>
         </Link>
       </nav>
 
       <div className="verify-container">
         <div className="section">
-          <h3 style={{color: "white", marginBottom: "20px"}}>Pending Requests</h3>
+          <h3 style={{ color: "white", marginBottom: "20px" }}>
+            Patient Requests
+          </h3>
+
           <div className="grid-container">
             {patients.length === 0 ? (
-              <p style={{color: "white"}}>No patient records found.</p>
+              <p style={{ color: "white" }}>No patient records found.</p>
             ) : (
               patients.map(p => (
                 <div className="card" key={p._id}>
                   <div className="card-header">
-                    <h4>{p.name}</h4>
-                    <span className={`status-badge ${p.status}`}>{p.status}</span>
+                    <h4>{p.name || "N/A"}</h4>
+                    <span className={`status-badge ${p.status}`}>
+                      {p.status}
+                    </span>
                   </div>
-                  <div style={{fontSize: "0.9rem", color: "#444"}}>
-                    <p><strong>Age/Gender:</strong> {p.age} yrs | {p.gender}</p>
-                    <p><strong>Phone:</strong> {p.phone}</p>
-                    <p><strong>Address:</strong> {p.address}</p>
-                    <p style={{marginTop: "5px", color: "#d9534f"}}><strong>Disease:</strong> {p.disease}</p>
+
+                  <div style={{ fontSize: "0.9rem", color: "#444" }}>
+                    <p>
+                      <strong>Age/Gender:</strong>{" "}
+                      {p.age || "-"} yrs | {p.gender || "-"}
+                    </p>
+
+                    <p>
+                      <strong>Phone:</strong> {p.phone || "-"}
+                    </p>
+
+                    <p>
+                      <strong>Address:</strong> {p.address || "-"}
+                    </p>
+
+                    <p style={{ marginTop: "5px", color: "#d9534f" }}>
+                      <strong>Disease:</strong> {p.disease || "Not specified"}
+                    </p>
                   </div>
 
                   {p.status === "Pending" && (
                     <div className="btn-group">
-                      <button className="accept-btn" onClick={() => handleStatusUpdate(p._id, "Approved")}>Approve</button>
-                      <button className="reject-btn" onClick={() => handleStatusUpdate(p._id, "Rejected")}>Reject</button>
+                      <button
+                        className="accept-btn"
+                        onClick={() => handleStatusUpdate(p._id, "Approved")}
+                      >
+                        Approve
+                      </button>
+
+                      <button
+                        className="reject-btn"
+                        onClick={() => handleStatusUpdate(p._id, "Rejected")}
+                      >
+                        Reject
+                      </button>
                     </div>
                   )}
                 </div>
