@@ -3,17 +3,22 @@ const mongoose = require("mongoose");
 const bookingSchema = new mongoose.Schema({
   patientId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Patient"
+    ref: "Patient",
+    required: true
   },
   doctorId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Doctor"
+    ref: "Doctor",
+    required: true
   },
-  date: Date,
+  date: {
+    type: String,
+    required: true
+  },
   status: {
     type: String,
-    default: "pending"
+    default: "Pending"
   }
-}, { timestamps: true });
+});
 
 module.exports = mongoose.model("Booking", bookingSchema);

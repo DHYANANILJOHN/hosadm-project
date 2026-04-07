@@ -8,25 +8,36 @@ function DoctorLogin() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const login = () => {
-    axios
-      .post("http://localhost:5000/Doctor/login", {
-        email: email,
-        password: password
-      })
-      .then((res) => {
+  const login = async () => {
+    if (!email || !password) {
+      alert("Please enter email and password");
+      return;
+    }
 
-        // store doctor data
-        localStorage.setItem("doctor", JSON.stringify(res.data.doctor));
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/doctors/login", // ✅ FIXED URL
+        {
+          email: email,
+          password: password,
+        }
+      );
 
-        alert(res.data.msg || "Login successful");
+      // ✅ Save doctor data
+      localStorage.setItem("doctor", JSON.stringify(res.data.doctor));
 
-        // go to doctor dashboard
-        navigate("/docdash/docprofile");
-      })
-      .catch((err) => {
-        alert(err.response?.data?.msg || "Login failed");
-      });
+      alert(res.data.msg || "Login successful");
+
+      // ✅ Navigate to dashboard
+      navigate("/docdash/docprofile");
+
+    } catch (err) {
+      console.error(err);
+
+      alert(
+        err.response?.data?.msg || "Login failed. Check server or credentials."
+      );
+    }
   };
 
   return (
@@ -34,15 +45,14 @@ function DoctorLogin() {
       <div className="card login-box p-4 col-md-4">
 
         <h3 className="text-center mb-4">Doctor Login</h3>
+
         <input
           type="email"
-          className="form-control"
+          className="form-control mb-3"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-
-
 
         <input
           type="password"

@@ -1,30 +1,58 @@
 const express = require("express");
 const router = express.Router();
 const Admin = require("../models/Admin");
+const bcrypt = require("bcryptjs");
 
-// get all
-router.get("/", async (req, res) => {
-  const data = await Admin.find();
-  res.json(data);
+/* LOGIN */
+router.post("/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    const admin = await Admin.findOne({ username });
+
+    if (!admin) {
+      return res.json({ success: false, msg: "Admin not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, admin.password);
+
+    if (!isMatch) {
+      return res.json({ success: false, msg: "Wrong password" });
+    }
+
+    // ✅ FIX: add success flag
+    res.json({
+      success: true,
+      msg: "Login success",
+      admin
+    });
+
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
 });
 
-// add admin
-router.post("/", async (req, res) => {
-  const a = new Admin(req.body);
-  await a.save();
-  res.json({ msg: "Admin added" });
-});
+/* FORGOT PASSWORD */
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { username, newPassword } = req.body;
 
-// approve
-router.put("/approve/:id", async (req, res) => {
-  await Admin.findByIdAndUpdate(req.params.id, { status: "Active" });
-  res.json({ msg: "Approved" });
-});
+    const admin = await Admin.findOne({ username });
 
-// reject
-router.put("/reject/:id", async (req, res) => {
-  await Admin.findByIdAndUpdate(req.params.id, { status: "Rejected" });
-  res.json({ msg: "Rejected" });
+    if (!admin) {
+      return res.json({ success: false, msg: "Admin not found" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    admin.password = hashedPassword;
+    await admin.save();
+
+    res.json({ success: true, msg: "Password updated" });
+
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
 });
 
 module.exports = router;

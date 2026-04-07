@@ -1,0 +1,71 @@
+/* --- LOGIN CONTAINER --- */
+.login-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- BACKGROUND (FIXED - NO ERROR) --- */
+.dashboard-bg {
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url("https://picsum.photos/1600/900")
+    center/cover no-repeat fixed;
+}
+
+/* --- LOGIN BOX --- */
+.login-box {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  padding: 40px 30px;
+  border-radius: 15px;
+  width: 320px;
+  color: white;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+
+/* TITLE */
+.login-box h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: bold;
+}
+
+/* INPUTS */
+.login-box input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+/* BUTTON */
+.login-box button {
+  width: 100%;
+  padding: 10px;
+  background: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.login-box button:hover {
+  background: #0b5ed7;
+}
+
+/* --- LINKS --- */
+.forgot-link,
+.back-link {
+  text-align: center;
+  margin-top: 10px;
+  cursor: pointer;
+  color: #00c6ff;
+  font-size: 0.9rem;
+}

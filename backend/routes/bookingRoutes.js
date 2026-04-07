@@ -2,26 +2,53 @@ const express = require("express");
 const router = express.Router();
 const Booking = require("../models/Booking");
 
-// get all bookings
+// ✅ GET ALL BOOKINGS
 router.get("/", async (req, res) => {
-  const data = await Booking.find()
-    .populate("doctorId")
-    .populate("patientId");
+  try {
+    const data = await Booking.find()
+      .populate("doctorId")
+      .populate("patientId");
 
-  res.json(data);
+    res.json(data);
+  } catch (err) {
+    console.error("GET BOOKINGS ERROR:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
 });
 
-// create booking
+// ✅ CREATE BOOKING
 router.post("/", async (req, res) => {
-  const b = new Booking(req.body);
-  await b.save();
-  res.json({ msg: "Booking created" });
+  try {
+    const { patientId, doctorId, date } = req.body;
+
+    // 🔴 BASIC VALIDATION
+    if (!patientId || !doctorId || !date) {
+      return res.status(400).json({ msg: "Missing required fields" });
+    }
+
+    const b = new Booking(req.body);
+    await b.save();
+
+    res.json({ msg: "Booking created" });
+
+  } catch (err) {
+    console.error("BOOKING ERROR:", err);
+    res.status(500).json({
+      msg: "Server error",
+      error: err.message   // 🔍 helps debugging
+    });
+  }
 });
 
-// cancel booking
+// ✅ CANCEL BOOKING
 router.put("/cancel/:id", async (req, res) => {
-  await Booking.findByIdAndUpdate(req.params.id, { status: "Cancelled" });
-  res.json({ msg: "Cancelled" });
+  try {
+    await Booking.findByIdAndUpdate(req.params.id, { status: "Cancelled" });
+    res.json({ msg: "Cancelled" });
+  } catch (err) {
+    console.error("CANCEL ERROR:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
 });
 
 module.exports = router;

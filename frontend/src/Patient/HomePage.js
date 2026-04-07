@@ -5,162 +5,98 @@ import "./Homepage.css";
 function HomePage() {
   return (
     <div className="home-container">
-
-      <nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-transparent px-4">
-        <div className="container-fluid">
-
+      {/* NAVBAR */}
+      <nav className="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div className="container">
           <Link className="navbar-brand fw-bold" to="/home">
-            🏥 HOSPITAL CARE
+            🏥 HOSPITAL <span style={{ color: "#00c8ff" }}>CARE</span>
           </Link>
 
           <button
-            className="navbar-toggler"
+            className="navbar-toggler border-0"
             type="button"
             data-bs-toggle="offcanvas"
             data-bs-target="#offcanvasNavbar"
-            aria-controls="offcanvasNavbar"
           >
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div
-            className="offcanvas offcanvas-end text-bg-dark"
-            tabIndex="-1"
-            id="offcanvasNavbar"
-          >
+          <div className="offcanvas offcanvas-end text-bg-dark" id="offcanvasNavbar">
             <div className="offcanvas-header">
-              <h5 className="offcanvas-title">Menu</h5>
-              <button
-                type="button"
-                className="btn-close btn-close-white"
-                data-bs-dismiss="offcanvas"
-                aria-label="Close"
-              ></button>
+              <h5 className="offcanvas-title">Navigation</h5>
+              <button className="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
             </div>
 
             <div className="offcanvas-body">
-              <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
-
-                <li className="nav-item">
-                  <Link className="nav-link active" to="/home">
-                    Home
-                  </Link>
-                </li>
-
+              <ul className="navbar-nav ms-auto align-items-center">
                 {/* REGISTER DROPDOWN */}
                 <li className="nav-item dropdown">
-                  <span
-                    className="nav-link dropdown-toggle"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                  >
+                  <span className="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button">
                     Register
                   </span>
-
-                  <ul className="dropdown-menu">
-
-                    <li>
-                      <Link className="dropdown-item" to="/testrun">
-                        Patient Register
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link className="dropdown-item" to="/docreg">
-                        Doctor Register
-                      </Link>
-                    </li>
-
+                  <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg">
+                    <li><Link className="dropdown-item py-2" to="/testrun">Patient Register</Link></li>
+                    <li><Link className="dropdown-item py-2" to="/docreg">Doctor Register</Link></li>
                   </ul>
                 </li>
 
                 {/* LOGIN DROPDOWN */}
                 <li className="nav-item dropdown">
-                  <span
-                    className="nav-link dropdown-toggle"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                  >
+                  <span className="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button">
                     Login
                   </span>
-
-                  <ul className="dropdown-menu">
-                    <li>
-                      <Link className="dropdown-item" to="/enter">
-                        Patient Login
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link className="dropdown-item" to="/doclog">
-                        Doctor Login
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link className="dropdown-item" to="/adlog">
-                        Admin Register
-                      </Link>
-                    </li>
+                  <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg">
+                    <li><Link className="dropdown-item py-2" to="/enter">Patient Login</Link></li>
+                    <li><Link className="dropdown-item py-2" to="/doclog">Doctor Login</Link></li>
+                    <li><hr className="dropdown-divider" /></li>
+                    <li><Link className="dropdown-item py-2" to="/adlog">Admin Access</Link></li>
                   </ul>
                 </li>
-
               </ul>
             </div>
-
           </div>
         </div>
       </nav>
 
-
+      {/* HERO SECTION */}
       <section className="hero-section">
-        <div className="overlay"></div>
-        <div className="hero-content">
-          <h1>Welcome to Our Hospital</h1>
+        <div className="hero-content px-3 animate-fade">
+          <h1>Compassionate Care <br /> Meets Innovation</h1>
           <p>
-            Dedicated to providing compassionate care and modern medical
-            services for you and your family.
+            Your health is our priority. Connect with top-rated specialists 
+            and manage your wellness with our digital healthcare platform.
           </p>
-          <Link to="/docbook" className="hero-btn">
+          <Link to="/Booking" className="hero-btn">
             Book Appointment
           </Link>
         </div>
       </section>
 
-
-      <section className="info-section container py-5">
-        <div className="row g-4">
-
+      {/* CARDS SECTION */}
+      <section className="info-section container">
+        <div className="row g-4 justify-content-center">
           <div className="col-md-4">
-            <div className="glass-card">
-              <h5>24/7 Emergency Support</h5>
-              <p>
-                Our emergency team is ready at all times to provide life-saving care.
-              </p>
+            <div className="glass-card text-center">
+              <h5>24/7 Availability</h5>
+              <p>Round-the-clock medical assistance and emergency support for your peace of mind.</p>
             </div>
           </div>
 
           <div className="col-md-4">
-            <div className="glass-card">
-              <h5>Expert Doctors</h5>
-              <p>
-                Consult with highly experienced specialists across departments.
-              </p>
+            <div className="glass-card text-center">
+              <h5>Top Specialists</h5>
+              <p>Access a network of highly qualified doctors across various medical disciplines.</p>
             </div>
           </div>
 
           <div className="col-md-4">
-            <div className="glass-card">
-              <h5>Modern Facilities</h5>
-              <p>
-                Advanced technology for accurate diagnosis and treatment.
-              </p>
+            <div className="glass-card text-center">
+              <h5>Modern Care</h5>
+              <p>Utilizing the latest technology to ensure accurate diagnosis and effective treatments.</p>
             </div>
           </div>
-
         </div>
       </section>
-
     </div>
   );
 }

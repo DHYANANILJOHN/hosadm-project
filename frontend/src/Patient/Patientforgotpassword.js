@@ -16,11 +16,10 @@ function PatientForgotPassword() {
       return;
     }
 
-    axios
-      .put("http://localhost:5000/Patient/reset-password", {
-        email: email,
-        newPassword: newPassword,
-      })
+    axios.put("http://localhost:5000/api/patients/reset-password", {
+  email,
+  newPassword
+})
       .then((res) => {
         alert(res.data.msg || "Password reset successful");
         setEmail("");

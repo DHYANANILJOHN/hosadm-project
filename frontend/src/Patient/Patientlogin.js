@@ -27,7 +27,7 @@ function PatientLogin() {
 
         alert("Login Successful!");
 
-        // save patient data
+        // ✅ Save patient
         localStorage.setItem("patient", JSON.stringify(response.data.patient));
 
         setPatient(response.data.patient);
@@ -44,7 +44,9 @@ function PatientLogin() {
     setPatient(null);
   };
 
-  // If patient logged in → show dashboard
+  // ============================
+  // ✅ DASHBOARD (AFTER LOGIN)
+  // ============================
   if (patient) {
     return (
       <div className="auth-container">
@@ -56,18 +58,33 @@ function PatientLogin() {
         <p><b>Phone:</b> {patient.phone}</p>
         <p><b>Age:</b> {patient.age}</p>
         <p><b>DOB:</b> {patient.dob}</p>
-        <p><b>Gender:</b> {patient.sex}</p>
+
+        {/* ✅ FIXED GENDER */}
+        <p><b>Gender:</b> {patient.gender}</p>
 
         <h3>Medical History</h3>
         <p>No history available</p>
 
         <br />
+
+        {/* ✅ BOOKING BUTTON */}
+        <Link to="/Booking">
+          <button style={{ marginBottom: "10px" }}>
+            Book Appointment
+          </button>
+        </Link>
+
+        <br />
+
+        {/* LOGOUT */}
         <button onClick={logout}>Logout</button>
       </div>
     );
   }
 
-  // Login Page
+  // ============================
+  // LOGIN PAGE
+  // ============================
   return (
     <div className="auth-container">
       <h2>Patient Login</h2>
@@ -87,16 +104,16 @@ function PatientLogin() {
           onChange={handleChange}
         /><br /><br />
 
-      <button type="submit">Login</button>
-</form>
+        <button type="submit">Login</button>
+      </form>
 
-<p>
-  <Link to="/forgot">Forgot Password?</Link>
-</p>
+      <p>
+        <Link to="/forgot">Forgot Password?</Link>
+      </p>
 
-<p>
-  Don't have an account? <Link to="/testrun">Register here</Link>
-</p>
+      <p>
+        Don't have an account? <Link to="/testrun">Register here</Link>
+      </p>
     </div>
   );
 }

@@ -1,138 +1,181 @@
 import React, { useState, useEffect } from "react";
 import "./AdminDashboard.css";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function AdminDashboard() {
   const [doctors, setDoctors] = useState([]);
   const [patients, setPatients] = useState([]);
+  const [bookings, setBookings] = useState([]); // ✅ NEW
+  const [view, setView] = useState("all");
 
   useEffect(() => {
-    const doctorData = [
-      { id: 1, name: "Dr. Smith", specialty: "Cardiologist", status: "Active" },
-      { id: 2, name: "Dr. Alice", specialty: "Dermatologist", status: "Pending" },
-      { id: 3, name: "Dr. John", specialty: "Pediatrician", status: "Active" },
-      { id: 4, name: "Dr. Amit Patel", specialty: "Orthopedic Surgeon", status: "Pending" },
-    ];
-    const patientData = [
-      { id: 1, name: "Rahul", time: "10:00 AM", history: "Cold & Fever" },
-      { id: 2, name: "Sneha", time: "11:30 AM", history: "Dental Checkup" },
-      { id: 3, name: "Riya", time: "1:15 PM", history: "Allergy Treatment" },
-      { id: 4, name: "Denny", time: "3:15 PM", history: "General Checkup" },
-    ];
-
-    setDoctors(doctorData);
-    setPatients(patientData);
+    fetchData();
   }, []);
 
-  const handleEdit = (id) => alert(`Editing Doctor ID: ${id}`);
-  const handleAccept = (id) =>
-    setDoctors((prev) =>
-      prev.map((doc) =>
-        doc.id === id ? { ...doc, status: "Active" } : doc
-      )
-    );
+  const fetchData = async () => {
+    try {
+      const d = await axios.get("http://localhost:5000/api/doctors");
+      const p = await axios.get("http://localhost:5000/api/patients");
+      const b = await axios.get("http://localhost:5000/api/bookings"); // ✅ NEW
+
+      setDoctors(d.data);
+      setPatients(p.data);
+      setBookings(b.data); // ✅ NEW
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // APPROVE
+  const approveDoctor = async (id) => {
+    try {
+      await axios.put(`http://localhost:5000/api/doctors/approve/${id}`);
+      fetchData();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // REJECT
+  const rejectDoctor = async (id) => {
+    try {
+      await axios.put(`http://localhost:5000/api/doctors/reject/${id}`);
+      fetchData();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="dashboard-bg">
 
-      <nav className="navbar navbar-dark bg-primary fixed-top shadow-sm">
-        <div className="container-fluid d-flex justify-content-between align-items-center px-3">
-          <span className="navbar-brand fw-bold">🏥 Admin Dashboard</span>
-          <Link to="/adlog">
-            <button className="btn btn-danger btn-sm">Logout</button>
+      <nav className="navbar navbar-expand-lg shadow-sm">
+        <div className="container-fluid">
+          <span className="nav-brand">🏥 MEDIC-ADMIN</span>
+          <Link to="/adlog" className="btn btn-outline-light btn-sm fw-bold">
+            Logout
           </Link>
         </div>
       </nav>
 
+      <div className="d-flex flex-grow-1 overflow-hidden">
 
-      <div className="dashboard-container">
+        {/* SIDEBAR */}
+        <div className="sidebar shadow">
+          <h5 className="text-info fw-bold mb-4">Dashboard</h5>
+          <ul className="p-0">
+            <li className={view === "all" ? "active" : ""} onClick={() => setView("all")}>📊 Overview</li>
+            <li className={view === "doc" ? "active" : ""} onClick={() => setView("doc")}>👨‍⚕️ Doctors</li>
+            <li className={view === "pat" ? "active" : ""} onClick={() => setView("pat")}>🧍 Patients</li>
 
-        <div className="sidebar">
-          <h2>Admin Panel</h2>
-          <ul>
-            <li><a href="#" className="active">Dashboard</a></li>
-            <li>
-              <Link to="/docdeti">Doctors</Link>
-            </li> 
-            <li>
-              <Link to="/deti">Patients</Link>
+            {/* ✅ NEW TAB */}
+            <li className={view === "book" ? "active" : ""} onClick={() => setView("book")}>
+              📅 Bookings
             </li>
-            <li><Link to="/Booking"> Register</Link></li>
           </ul>
         </div>
 
-
         <div className="main-content">
-          <div className="row g-4">
+          <div className="container-fluid">
 
-            <div className="col-md-6">
-              <div className="card shadow-lg border-0">
-                <div className="card-header bg-info text-white fw-bold">
-                  👨‍⚕️ Doctor Details
-                </div>
-                <div className="card-body overflow-auto" style={{ maxHeight: "60vh" }}>
-                  {doctors.map((doc) => (
-                    <div className="card mb-3 border-0 shadow-sm" key={doc.id}>
-                      <div className="card-body">
-                        <h6 className="fw-bold">{doc.name}</h6>
-                        <p className="mb-1 text-muted">{doc.specialty}</p>
-                        <p>
-                          Status:{" "}
-                          <span
-                            className={`badge ${doc.status === "Active"
-                                ? "bg-success"
-                                : "bg-warning text-dark"
-                              }`}
-                          >
+            {/* DOCTORS */}
+            {(view === "all" || view === "doc") && (
+              <div className="mb-5">
+                <h3 className="fw-bold">Doctor Verification Requests</h3>
+                <div className="row g-4">
+                  {doctors.map(doc => (
+                    <div className="col-12 col-md-6 col-lg-4" key={doc._id}>
+                      <div className="glass-card">
+
+                        <div className="d-flex justify-content-between">
+                          <h4>{doc.name}</h4>
+                          <span className={`badge-custom status-${doc.status}`}>
                             {doc.status}
                           </span>
-                        </p>
-                        <div>
-                          <button
-                            className="btn btn-sm btn-primary me-2"
-                            onClick={() => handleEdit(doc.id)}
-                          >
-                            Edit
-                          </button>
-                          {doc.status !== "Active" && (
-                            <button
-                              className="btn btn-sm btn-success"
-                              onClick={() => handleAccept(doc.id)}
-                            >
-                              Accept
-                            </button>
-                          )}
                         </div>
+
+                        <p><strong>Specialty:</strong> {doc.specialty}</p>
+                        <p><strong>Email:</strong> {doc.email}</p>
+
+                        {doc.status === "Pending" && (
+                          <div>
+                            <button
+                              className="btn-approve"
+                              onClick={() => approveDoctor(doc._id)}
+                            >
+                              Approve
+                            </button>
+
+                            <button
+                              className="btn-reject"
+                              onClick={() => rejectDoctor(doc._id)}
+                            >
+                              Reject
+                            </button>
+                          </div>
+                        )}
+
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
+            )}
 
-
-            <div className="col-md-6">
-              <div className="card shadow-lg border-0">
-                <div className="card-header bg-info text-white fw-bold">
-                  🧍‍♀️ Patient Overview
-                </div>
-                <div className="card-body overflow-auto" style={{ maxHeight: "60vh" }}>
-                  <p><strong>Total Patients:</strong> {patients.length}</p>
-                  <p><strong>Total Bookings:</strong> {patients.length}</p>
-                  <hr />
-                  <h6 className="fw-bold mb-3">🩺 Recent Bookings</h6>
-                  {patients.map((p) => (
-                    <div className="card patient-card border-0 shadow-sm mb-3" key={p.id}>
-                      <div className="card-body p-2">
-                        <p className="fw-bold mb-1">{p.name}</p>
-                        <p className="small mb-0 text-muted">Time: {p.time}</p>
-                        <p className="small mb-0">History: {p.history}</p>
+            {/* PATIENTS */}
+            {(view === "all" || view === "pat") && (
+              <div>
+                <h3 className="mb-4 fw-bold">Registered Patients</h3>
+                <div className="row g-4">
+                  {patients.map(p => (
+                    <div className="col-12 col-md-6 col-lg-4" key={p._id}>
+                      <div className="glass-card">
+                        <h4>{p.name}</h4>
+                        <p><strong>Gender:</strong> {p.gender}</p>
+                        <p><strong>Contact:</strong> {p.phone}</p>
+                        <p><strong>Disease:</strong> {p.disease}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
+            )}
+
+            {/* ✅ BOOKINGS VIEW */}
+            {(view === "all" || view === "book") && (
+              <div className="mt-5">
+                <h3 className="fw-bold">All Bookings</h3>
+
+                <div className="row g-4">
+                  {bookings.map(b => (
+                    <div className="col-12 col-md-6 col-lg-4" key={b._id}>
+                      <div className="glass-card">
+
+                        <h5>{b.patientId?.name || "Unknown Patient"}</h5>
+
+                        <p>
+                          <strong>Doctor:</strong>{" "}
+                          {b.doctorId?.name || "Unknown Doctor"}
+                        </p>
+
+                        <p>
+                          <strong>Date:</strong>{" "}
+                          {new Date(b.date).toLocaleDateString()}
+                        </p>
+
+                        <p>
+                          <strong>Status:</strong> {b.status}
+                        </p>
+
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+              </div>
+            )}
+
           </div>
         </div>
       </div>

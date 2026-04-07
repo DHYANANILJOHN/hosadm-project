@@ -1,106 +1,70 @@
 import React, { useState, useEffect } from "react";
+import "./AdminExtra.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import "./AdminDashboard.css";
 
 function AdminPatientVerify() {
   const [patients, setPatients] = useState([]);
 
-  // 🔥 Fetch patients from backend
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/Patient")
-      .then((res) => {
-        setPatients(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    fetchPatients();
   }, []);
 
-  // ✅ Approve patient
-  const handleAccept = (id) => {
-    axios
-      .put(`http://localhost:5000/Patient/approve/${id}`)
-      .then(() => {
-        alert("Approved");
-        window.location.reload(); // refresh page
-      })
-      .catch((err) => console.log(err));
+  const fetchPatients = () => {
+   axios.get("http://localhost:5000/api/patients")
+      .then(res => setPatients(res.data))
+      .catch(err => console.log(err));
   };
 
-  // ❌ Reject patient
-  const handleReject = (id) => {
-    axios
-      .put(`http://localhost:5000/Patient/reject/${id}`)
+  const handleStatusUpdate = (id, status) => {
+    const endpoint = status === "Approved" ? "approve" : "reject";
+    axios.put(`http://localhost:5000/api/patients/${endpoint}/${id}`)
       .then(() => {
-        alert("Rejected");
-        window.location.reload(); // refresh page
-      })
-      .catch((err) => console.log(err));
+        setPatients(prev =>
+          prev.map(p => p._id === id ? { ...p, status: status } : p)
+        );
+      });
   };
 
   return (
     <div className="dashboard-bg">
-      <nav className="navbar navbar-dark bg-primary fixed-top">
-        <div className="container-fluid">
-          <span className="navbar-brand fw-bold">Patient Verification</span>
-          <Link to="/addash">
-            <button className="btn btn-light btn-sm">Back</button>
-          </Link>
-        </div>
+      <nav className="navbar">
+        <div className="nav-brand">🏥 Patient Verification</div>
+        <Link to="/addash">
+          <button className="logout-btn" style={{background: "#6c757d"}}>Back to Dashboard</button>
+        </Link>
       </nav>
 
-      <div className="verify-container pt-5 mt-4">
-        <h3 className="text-center fw-bold mb-4">
-          Patient Verification Details
-        </h3>
+      <div className="verify-container">
+        <div className="section">
+          <h3 style={{color: "white", marginBottom: "20px"}}>Pending Requests</h3>
+          <div className="grid-container">
+            {patients.length === 0 ? (
+              <p style={{color: "white"}}>No patient records found.</p>
+            ) : (
+              patients.map(p => (
+                <div className="card" key={p._id}>
+                  <div className="card-header">
+                    <h4>{p.name}</h4>
+                    <span className={`status-badge ${p.status}`}>{p.status}</span>
+                  </div>
+                  <div style={{fontSize: "0.9rem", color: "#444"}}>
+                    <p><strong>Age/Gender:</strong> {p.age} yrs | {p.gender}</p>
+                    <p><strong>Phone:</strong> {p.phone}</p>
+                    <p><strong>Address:</strong> {p.address}</p>
+                    <p style={{marginTop: "5px", color: "#d9534f"}}><strong>Disease:</strong> {p.disease}</p>
+                  </div>
 
-        <div className="container">
-          {patients.map((p) => (
-            <div className="card shadow-sm p-3 mb-3" key={p._id}>
-              <h5 className="fw-bold">{p.name}</h5>
-
-              <p><strong>Age:</strong> {p.age}</p>
-              <p><strong>Gender:</strong> {p.gender}</p>
-              <p><strong>Phone:</strong> {p.phone}</p>
-              <p><strong>Address:</strong> {p.address}</p>
-              <p><strong>Disease:</strong> {p.disease}</p>
-
-              <p>
-                <strong>Status:</strong>
-                <span
-                  className={`badge ms-1 ${
-                    p.status === "Approved"
-                      ? "bg-success"
-                      : p.status === "Rejected"
-                      ? "bg-danger"
-                      : "bg-warning text-dark"
-                  }`}
-                >
-                  {p.status}
-                </span>
-              </p>
-
-              {p.status === "Pending" && (
-                <div className="mt-2">
-                  <button
-                    className="btn btn-success btn-sm me-2"
-                    onClick={() => handleAccept(p._id)}
-                  >
-                    Accept
-                  </button>
-
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleReject(p._id)}
-                  >
-                    Reject
-                  </button>
+                  {p.status === "Pending" && (
+                    <div className="btn-group">
+                      <button className="accept-btn" onClick={() => handleStatusUpdate(p._id, "Approved")}>Approve</button>
+                      <button className="reject-btn" onClick={() => handleStatusUpdate(p._id, "Rejected")}>Reject</button>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          ))}
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>
