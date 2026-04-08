@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./Booking.css";
 import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Booking() {
   const [form, setForm] = useState({
@@ -21,67 +23,71 @@ function Booking() {
         const approvedDoctors = data.filter(d => d.status === "Active");
         setDoctors(approvedDoctors);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        toast.error("Failed to load doctors");
+      });
   }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-  };const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  if (!form.name || !form.doctorId || !form.date) {
-    alert("Please fill required fields");
-    return;
-  }
-
-  const patient = JSON.parse(localStorage.getItem("patient"));
-
-  let bookingData = {
-    doctorId: form.doctorId,
-    date: form.date,
-    time: form.time,
-    reason: form.reason,
   };
 
-  if (patient && patient._id) {
-    // ✅ Logged-in booking
-    bookingData.patientId = patient._id;
-  } else {
-    // ✅ Guest booking
-    bookingData.guestName = form.name;
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  console.log("Booking Data:", bookingData);
-
-  try {
-    const res = await fetch("http://localhost:5000/api/bookings", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(bookingData),
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      alert("✅ Appointment Booked!");
-      setForm({
-        name: "",
-        doctorId: "",
-        date: "",
-        time: "",
-        reason: "",
-      });
-    } else {
-      alert(data.msg);
+    if (!form.name || !form.doctorId || !form.date) {
+      toast.warning("Please fill required fields");
+      return;
     }
 
-  } catch (err) {
-    console.error(err);
-    alert("❌ Server error");
-  }
-};
+    const patient = JSON.parse(localStorage.getItem("patient"));
+
+    let bookingData = {
+      doctorId: form.doctorId,
+      date: form.date,
+      time: form.time,
+      reason: form.reason,
+    };
+
+    if (patient && patient._id) {
+      bookingData.patientId = patient._id;
+    } else {
+      bookingData.guestName = form.name;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bookingData),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        // ✅ SHOW BACKEND MESSAGE
+        toast.success(data.msg || "Appointment Booked!");
+
+        setForm({
+          name: "",
+          doctorId: "",
+          date: "",
+          time: "",
+          reason: "",
+        });
+      } else {
+        // ❌ SHOW BACKEND ERROR
+        toast.error(data.msg || "Booking failed");
+      }
+
+    } catch (err) {
+      console.error(err);
+      toast.error("Server error");
+    }
+  };
 
   return (
     <div className="booking-container">
@@ -136,6 +142,9 @@ function Booking() {
           <Link to="/home">Back to Home</Link>
         </p>
       </form>
+
+      {/* ✅ Toast Container */}
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

@@ -20,7 +20,6 @@ router.post("/login", async (req, res) => {
       return res.json({ success: false, msg: "Wrong password" });
     }
 
-    // ✅ FIX: add success flag
     res.json({
       success: true,
       msg: "Login success",

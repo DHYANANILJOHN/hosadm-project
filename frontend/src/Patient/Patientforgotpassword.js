@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Patient.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function PatientForgotPassword() {
   const [email, setEmail] = useState("");
@@ -13,12 +15,12 @@ function PatientForgotPassword() {
 
     // ✅ VALIDATION
     if (!email || !newPassword) {
-      alert("Please enter both email and new password.");
+      toast.error("Please enter both email and new password.");
       return;
     }
 
     if (newPassword.length < 4) {
-      alert("Password must be at least 4 characters");
+      toast.warning("Password must be at least 4 characters");
       return;
     }
 
@@ -28,15 +30,20 @@ function PatientForgotPassword() {
         newPassword
       })
       .then((res) => {
-        alert(res.data.msg || "Password reset successful");
+        // ✅ SUCCESS
+        toast.success(res.data.msg || "Password reset successful");
 
         setEmail("");
         setNewPassword("");
 
-        navigate("/enter"); // redirect to login
+        // slight delay so user can see toast
+        setTimeout(() => {
+          navigate("/enter");
+        }, 1500);
       })
       .catch((err) => {
-        alert(err.response?.data?.msg || "Error resetting password");
+        // ❌ ERROR
+        toast.error(err.response?.data?.msg || "Error resetting password");
         console.log("RESET ERROR:", err);
       });
   };
@@ -71,6 +78,9 @@ function PatientForgotPassword() {
         Remembered your password?{" "}
         <Link to="/enter">Login</Link>
       </p>
+
+      {/* ✅ Toast Container */}
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

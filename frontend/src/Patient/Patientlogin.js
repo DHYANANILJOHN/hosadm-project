@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./Patient.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function PatientLogin() {
 
@@ -21,27 +23,21 @@ function PatientLogin() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // ✅ VALIDATION
     if (!form.email || !form.password) {
-      alert("Please enter email and password");
+      toast.error("Please enter email and password");
       return;
     }
 
     axios
       .post("http://localhost:5000/api/patients/login", form)
       .then((response) => {
-
-        // ✅ SHOW BACKEND MESSAGE
-        alert(response.data.msg || "Login Successful!");
+        toast.success(response.data.msg || "Login Successful!");
 
         localStorage.setItem("patient", JSON.stringify(response.data.patient));
-
         setPatient(response.data.patient);
-
       })
       .catch((error) => {
-        // ✅ SHOW REAL ERROR
-        alert(error.response?.data?.msg || "Login Failed");
+        toast.error(error.response?.data?.msg || "Login Failed");
         console.log(error);
       });
   };
@@ -49,11 +45,10 @@ function PatientLogin() {
   const logout = () => {
     localStorage.removeItem("patient");
     setPatient(null);
+    toast.info("Logged out successfully");
   };
 
-  // ============================
   // DASHBOARD
-  // ============================
   if (patient) {
     return (
       <div className="auth-container">
@@ -81,13 +76,18 @@ function PatientLogin() {
         <br />
 
         <button onClick={logout}>Logout</button>
+
+        {/* ✅ HOME LINK (Dashboard) */}
+        <p style={{ marginTop: "10px" }}>
+          <Link to="/home">Go to Home</Link>
+        </p>
+
+        <ToastContainer position="top-right" autoClose={3000} />
       </div>
     );
   }
 
-  // ============================
   // LOGIN PAGE
-  // ============================
   return (
     <div className="auth-container">
       <h2>Patient Login</h2>
@@ -117,6 +117,13 @@ function PatientLogin() {
       <p>
         Don't have an account? <Link to="/testrun">Register here</Link>
       </p>
+
+      {/* ✅ HOME LINK (Login page) */}
+      <p>
+        <Link to="/home">Go to Home</Link>
+      </p>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

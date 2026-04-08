@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "./Doctor.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function DoctorLogin() {
   const [email, setEmail] = useState("");
@@ -10,13 +12,13 @@ function DoctorLogin() {
 
   const login = async () => {
     if (!email || !password) {
-      alert("Please enter email and password");
+      toast.warning("Please enter email and password");
       return;
     }
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/doctors/login", // ✅ FIXED URL
+        "http://localhost:5000/api/doctors/login",
         {
           email: email,
           password: password,
@@ -26,15 +28,17 @@ function DoctorLogin() {
       // ✅ Save doctor data
       localStorage.setItem("doctor", JSON.stringify(res.data.doctor));
 
-      alert(res.data.msg || "Login successful");
+      // ✅ SUCCESS MESSAGE
+      toast.success(res.data.msg || "Login successful");
 
-      // ✅ Navigate to dashboard
-      navigate("/docdash/docprofile");
+      setTimeout(() => {
+        navigate("/docdash/docprofile");
+      }, 1200);
 
     } catch (err) {
       console.error(err);
 
-      alert(
+      toast.error(
         err.response?.data?.msg || "Login failed. Check server or credentials."
       );
     }
@@ -66,7 +70,17 @@ function DoctorLogin() {
           Login
         </button>
 
+        {/* ✅ HOME BUTTON */}
+        <Link to="/home">
+          <button className="btn btn-secondary w-100 mt-3">
+            Home
+          </button>
+        </Link>
+
       </div>
+
+      {/* ✅ Toast Container */}
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

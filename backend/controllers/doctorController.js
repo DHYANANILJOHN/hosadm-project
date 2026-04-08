@@ -15,7 +15,7 @@ exports.doctorLogin = async (req, res) => {
       return res.status(400).json({ msg: "Doctor not found" });
     }
 
-    // check if admin approved
+    // check if admin approved//
     if (doctor.status !== "Active") {
       return res.status(403).json({ msg: "Doctor not approved yet" });
     }
@@ -44,9 +44,8 @@ exports.doctorLogin = async (req, res) => {
 };
 
 
-// ===============================
 // Get All Doctors
-// ===============================
+
 exports.getDoctors = async (req, res) => {
   try {
     const doctors = await Doctor.find();
@@ -57,9 +56,9 @@ exports.getDoctors = async (req, res) => {
 };
 
 
-// ===============================
+
 // Add Doctor
-// ===============================
+
 exports.addDoctor = async (req, res) => {
   try {
 
@@ -91,9 +90,8 @@ exports.addDoctor = async (req, res) => {
 };
 
 
-// ===============================
 // Approve Doctor
-// ===============================
+
 exports.approveDoctor = async (req, res) => {
   try {
 
@@ -108,10 +106,9 @@ exports.approveDoctor = async (req, res) => {
   }
 };
 
-
 // ===============================
 // Reject Doctor
-// ===============================
+
 exports.rejectDoctor = async (req, res) => {
   try {
 
@@ -125,9 +122,9 @@ exports.rejectDoctor = async (req, res) => {
     res.status(500).json({ msg: "Error rejecting doctor" });
   }
 };
-// ===============================
+
 // Doctor Registration
-// ===============================
+
 exports.registerDoctor = async (req, res) => {
 
   try {

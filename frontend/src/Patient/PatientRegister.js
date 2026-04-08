@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Patient.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 function PatientRegister() {
   const [form, setForm] = useState({
@@ -13,6 +16,8 @@ function PatientRegister() {
     gender: ""
   });
 
+  const navigate = useNavigate(); // ✅ ADD THIS
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -20,19 +25,18 @@ function PatientRegister() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // ✅ VALIDATION
     if (!form.name || !form.email || !form.password) {
-      alert("Name, Email and Password are required");
+      toast.error("Name, Email and Password are required");
       return;
     }
 
     axios
       .post("http://localhost:5000/api/patients/register", form)
       .then((response) => {
-        // ✅ SHOW BACKEND MESSAGE
-        alert(response.data.msg || "Registered Successfully!");
 
-        // OPTIONAL: clear form after success
+        toast.success(response.data.msg || "Registered Successfully!");
+
+        // ✅ CLEAR FORM
         setForm({
           name: "",
           email: "",
@@ -43,10 +47,14 @@ function PatientRegister() {
           gender: ""
         });
 
+        // ✅ REDIRECT TO LOGIN AFTER DELAY
+        setTimeout(() => {
+          navigate("/enter"); // your login route
+        }, 1500);
+
       })
       .catch((error) => {
-        // ✅ SHOW REAL ERROR
-        alert(error.response?.data?.msg || "Registration Failed");
+        toast.error(error.response?.data?.msg || "Registration Failed");
         console.log(error);
       });
   };
@@ -56,53 +64,17 @@ function PatientRegister() {
       <h2>Patient Registration</h2>
 
       <form onSubmit={handleSubmit}>
+        <input type="text" name="name" placeholder="Full Name" value={form.name} onChange={handleChange} /><br />
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Full Name"
-          value={form.name}
-          onChange={handleChange}
-        /><br />
+        <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} /><br />
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-        /><br />
+        <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} /><br />
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-        /><br />
+        <input type="text" name="phone" placeholder="Phone" value={form.phone} onChange={handleChange} /><br />
 
-        <input
-          type="text"
-          name="phone"
-          placeholder="Phone"
-          value={form.phone}
-          onChange={handleChange}
-        /><br />
+        <input type="number" name="age" placeholder="Age" value={form.age} onChange={handleChange} /><br />
 
-        <input
-          type="number"
-          name="age"
-          placeholder="Age"
-          value={form.age}
-          onChange={handleChange}
-        /><br />
-
-        <input
-          type="date"
-          name="dob"
-          value={form.dob}
-          onChange={handleChange}
-        /><br />
+        <input type="date" name="dob" value={form.dob} onChange={handleChange} /><br />
 
         <select name="gender" value={form.gender} onChange={handleChange}>
           <option value="">Select Gender</option>
@@ -112,8 +84,9 @@ function PatientRegister() {
         </select><br />
 
         <button type="submit">Register</button>
-
       </form>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

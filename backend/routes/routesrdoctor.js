@@ -12,21 +12,21 @@ router.post("/register", async (req, res) => {
 
     const { name, specialty, email, password } = req.body;
 
-    // ✅ Required validation
+    
     if (!name || !specialty || !email || !password) {
       return res.status(400).json({ msg: "Missing required fields" });
     }
 
-    // ✅ Check duplicate email
+  
     const existingDoctor = await Doctor.findOne({ email });
     if (existingDoctor) {
       return res.status(400).json({ msg: "Doctor already registered" });
     }
 
-    // ✅ Hash password
+  
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ SAFE DATA HANDLING (fixes 500 errors)
+    
     const doctor = new Doctor({
       name,
       specialty,
@@ -47,7 +47,6 @@ router.post("/register", async (req, res) => {
   } catch (error) {
     console.log("🔥 ERROR:", error);
 
-    // ✅ Duplicate key error fix
     if (error.code === 11000) {
       return res.status(400).json({ msg: "Email already exists" });
     }
@@ -57,9 +56,8 @@ router.post("/register", async (req, res) => {
 });
 
 
-// ======================
 // Get All Doctors
-// ======================
+
 router.get("/", async (req, res) => {
   try {
     const data = await Doctor.find();
@@ -99,9 +97,8 @@ router.post("/", async (req, res) => {
 });
 
 
-// ======================
 // Doctor Login
-// ======================
+
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -134,9 +131,9 @@ router.post("/login", async (req, res) => {
 });
 
 
-// ======================
+
 // Approve Doctor
-// ======================
+
 router.put("/approve/:id", async (req, res) => {
   await Doctor.findByIdAndUpdate(req.params.id, { status: "Active" });
   res.json({ msg: "Approved" });

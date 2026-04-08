@@ -45,7 +45,8 @@ router.get("/", async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 });
-// ✅ GET BOOKINGS FOR SPECIFIC DOCTOR
+
+// GET BOOKINGS FOR SPECIFIC DOCTOR
 router.get("/doctor/:id", async (req, res) => {
   try {
     const bookings = await Booking.find({ doctorId: req.params.id })

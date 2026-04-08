@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./AdminExtra.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function AdminLogin() {
   const [admin, setAdmin] = useState({
@@ -24,22 +26,25 @@ function AdminLogin() {
     try {
       const res = await axios.post("http://localhost:5000/admin/login", admin);
 
-      // ✅ FIX: use success from backend
       if (res.data.success) {
-        navigate("/addash");
+        toast.success(res.data.msg || "Login successful");
+
+        setTimeout(() => {
+          navigate("/addash");
+        }, 1200);
+
       } else {
-        alert(res.data.msg);
+        toast.error(res.data.msg || "Login failed");
       }
 
     } catch (err) {
       console.log(err);
-      alert("Server error");
+      toast.error("Server error");
     }
   };
 
   const handleReset = async () => {
     try {
-      // ✅ FIX: http0 → http
       const res = await axios.post(
         "http://localhost:5000/admin/forgot-password",
         {
@@ -48,12 +53,12 @@ function AdminLogin() {
         }
       );
 
-      alert(res.data.msg);
+      toast.success(res.data.msg || "Password updated");
       setResetMode(false);
 
     } catch (err) {
       console.log(err);
-      alert("Error resetting password");
+      toast.error("Error resetting password");
     }
   };
 
@@ -65,15 +70,36 @@ function AdminLogin() {
           <h2>{resetMode ? "Reset Password" : "Admin Login"}</h2>
 
           {!resetMode ? (
-            <form onSubmit={handleSubmit}>
-              <input name="username" placeholder="Username" onChange={handleChange} required />
-              <input name="password" type="password" placeholder="Password" onChange={handleChange} required />
-              <button type="submit">Login</button>
+            <>
+              <form onSubmit={handleSubmit}>
+                <input
+                  name="username"
+                  placeholder="Username"
+                  onChange={handleChange}
+                  required
+                />
+                <input
+                  name="password"
+                  type="password"
+                  placeholder="Password"
+                  onChange={handleChange}
+                  required
+                />
+                <button type="submit">Login</button>
 
-              <div className="forgot-link" onClick={() => setResetMode(true)}>
-                Forgot Password?
-              </div>
-            </form>
+                <div
+                  className="forgot-link"
+                  onClick={() => setResetMode(true)}
+                >
+                  Forgot Password?
+                </div>
+              </form>
+
+              {/* ✅ HOME LINK ADDED */}
+              <p className="back-home">
+                <Link to="/home">Go to Home</Link>
+              </p>
+            </>
           ) : (
             <>
               <input
@@ -89,14 +115,25 @@ function AdminLogin() {
               />
               <button onClick={handleReset}>Update Password</button>
 
-              <div className="back-link" onClick={() => setResetMode(false)}>
+              <div
+                className="back-link"
+                onClick={() => setResetMode(false)}
+              >
                 Back to Login
               </div>
+
+              {/* ✅ HOME LINK ALSO IN RESET SCREEN */}
+              <p className="back-home">
+                <Link to="/home">Go to Home</Link>
+              </p>
             </>
           )}
 
         </div>
       </div>
+
+      {/* ✅ Toast Container */}
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }
