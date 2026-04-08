@@ -118,7 +118,7 @@ function PatientLogin() {
         Don't have an account? <Link to="/testrun">Register here</Link>
       </p>
 
-      {/* ✅ HOME LINK (Login page) */}
+      {/*  HOME LINK (Login page) */}
       <p>
         <Link to="/home">Go to Home</Link>
       </p>

@@ -16,7 +16,7 @@ function PatientRegister() {
     gender: ""
   });
 
-  const navigate = useNavigate(); // ✅ ADD THIS
+  const navigate = useNavigate(); 
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -36,7 +36,7 @@ function PatientRegister() {
 
         toast.success(response.data.msg || "Registered Successfully!");
 
-        // ✅ CLEAR FORM
+     
         setForm({
           name: "",
           email: "",
@@ -47,7 +47,7 @@ function PatientRegister() {
           gender: ""
         });
 
-        // ✅ REDIRECT TO LOGIN AFTER DELAY
+        // REDIRECT TO LOGIN AFTER DELAY
         setTimeout(() => {
           navigate("/enter"); // your login route
         }, 1500);

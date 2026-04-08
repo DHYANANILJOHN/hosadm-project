@@ -13,7 +13,7 @@ function PatientForgotPassword() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // ✅ VALIDATION
+    // VALIDATION
     if (!email || !newPassword) {
       toast.error("Please enter both email and new password.");
       return;
@@ -30,7 +30,7 @@ function PatientForgotPassword() {
         newPassword
       })
       .then((res) => {
-        // ✅ SUCCESS
+        //  SUCCESS
         toast.success(res.data.msg || "Password reset successful");
 
         setEmail("");
@@ -79,7 +79,7 @@ function PatientForgotPassword() {
         <Link to="/enter">Login</Link>
       </p>
 
-      {/* ✅ Toast Container */}
+      {/* Toast Container */}
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
